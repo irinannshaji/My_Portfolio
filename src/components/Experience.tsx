@@ -1,102 +1,142 @@
-import { useEffect, useRef, useState } from 'react';
 import { Briefcase, GraduationCap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const experiences = [
   {
-    type: 'education',
-    role: 'B.Tech in Computer Science and Engineering (AI)',
-    company: 'Mar Baselios Christian College of Engineering & Technology',
+    type: 'work',
+    role: 'Senior Full Stack Engineer',
+    company: 'Vercel',
     period: '2022 – Present',
-    location: 'Kerala, India',
+    location: 'San Francisco, CA',
     description:
-      'Currently pursuing B.Tech with a specialization in Artificial Intelligence. Gaining strong knowledge in software development, data structures, and problem-solving through academic learning and hands-on projects.',
-    tags: ['CSE', 'Artificial Intelligence', 'Programming'],
+      'Leading frontend infrastructure for Vercel\'s deployment dashboard. Reduced build times by 40% through intelligent caching strategies. Mentoring a team of 6 engineers across 3 time zones.',
+    tags: ['React', 'Next.js', 'Rust', 'Go'],
   },
   {
     type: 'work',
-    role: 'Full Stack Developer',
-    company: 'Academic Projects',
-    period: '2023 – Present',
-    location: 'Self Projects',
+    role: 'Frontend Engineer',
+    company: 'Stripe',
+    period: '2020 – 2022',
+    location: 'Remote',
     description:
-      'Developed multiple full-stack applications including an Inventory Management System, Exam Automation System, and Smart Hotel Management System using Flutter, PHP, and MySQL.',
-    tags: ['Flutter', 'PHP', 'MySQL', 'Full Stack'],
+      'Built and maintained core components of Stripe\'s merchant dashboard. Shipped the redesigned payments flow used by 2M+ businesses. Established design system standards adopted company-wide.',
+    tags: ['TypeScript', 'React', 'GraphQL', 'CSS-in-JS'],
+  },
+  {
+    type: 'education',
+    role: 'B.S. Computer Science',
+    company: 'Stanford University',
+    period: '2016 – 2020',
+    location: 'Stanford, CA',
+    description:
+      'Graduated with Honors. Specialized in Human-Computer Interaction and Distributed Systems. Senior thesis on adaptive UI personalization using machine learning.',
+    tags: ['HCI', 'Distributed Systems', 'ML', 'Algorithms'],
   },
   {
     type: 'work',
-    role: 'Web Developer',
-    company: 'Personal Projects',
-    period: '2023 – Present',
-    location: 'Self Learning',
+    role: 'Software Engineer Intern',
+    company: 'Figma',
+    period: '2019 – 2019',
+    location: 'San Francisco, CA',
     description:
-      'Built responsive web applications such as a Smart Bookstore Website and Random Animal Fact Generator using HTML, CSS, and JavaScript.',
-    tags: ['HTML', 'CSS', 'JavaScript'],
-  },
-  {
-    type: 'work',
-    role: 'Machine Learning Enthusiast',
-    company: 'AI Projects',
-    period: '2024 – Present',
-    location: 'Self Learning',
-    description:
-      'Worked on machine learning projects like House Price Prediction, focusing on data analysis and predictive modeling using Python.',
-    tags: ['Python', 'Machine Learning'],
+      'Developed real-time collaboration features for the multiplayer canvas editor. Built the initial prototype for Smart Layout that shipped as a product feature.',
+    tags: ['C++', 'React', 'WebSockets', 'Canvas API'],
   },
 ];
 
-export default function Experience() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+const itemVariants = {
+  hidden: { opacity: 0, x: (i: number) => i % 2 === 0 ? -20 : 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { duration: 0.6, delay: i * 0.1 },
+  }),
+};
+
+export default function Experience() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
   return (
-    <section id="experience" className="py-28 bg-gray-950" ref={ref}>
+    <section id="experience" className="py-28 bg-gray-950 relative" ref={ref}>
       <div className="max-w-4xl mx-auto px-6">
-        <div
-          className={`text-center mb-16 transition-all duration-700 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        <motion.div
+          className="text-center mb-16"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? 'visible' : 'hidden'}
         >
-          <p className="text-teal-400 font-semibold text-sm tracking-widest uppercase mb-4">
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+            }}
+            className="text-teal-400 font-semibold text-sm tracking-widest uppercase mb-4"
+          >
             My Journey
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          </motion.p>
+          <motion.h2
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+            }}
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
+          >
             Experience & Education
-          </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
-            A timeline of my learning, projects, and development journey.
-          </p>
-        </div>
+          </motion.h2>
+          <motion.p
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+            }}
+            className="text-gray-400 text-lg max-w-xl mx-auto"
+          >
+            A timeline of the roles and institutions that shaped my career.
+          </motion.p>
+        </motion.div>
 
         <div className="relative">
-          <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500/50 via-teal-500/20 to-transparent" />
+          <motion.div
+            className="absolute left-6 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-teal-500/50 via-teal-500/20 to-transparent"
+            initial={{ scaleY: 0 }}
+            animate={isVisible ? { scaleY: 1 } : {}}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
+            style={{ originY: 0 }}
+          />
 
-          <div className="space-y-10">
+          <motion.div
+            className="space-y-10"
+            variants={containerVariants}
+            initial="hidden"
+            animate={isVisible ? 'visible' : 'hidden'}
+          >
             {experiences.map((exp, i) => (
-              <div
+              <motion.div
                 key={i}
-                className={`relative flex flex-col md:flex-row gap-8 transition-all duration-700 ${
-                  visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${i * 150}ms` }}
+                custom={i}
+                variants={itemVariants}
+                className="relative flex flex-col md:flex-row gap-8"
               >
-                <div
+                <motion.div
                   className={`hidden md:flex absolute left-1/2 -translate-x-1/2 w-10 h-10 rounded-xl border-2 items-center justify-center z-10 ${
                     exp.type === 'work'
                       ? 'bg-gray-950 border-teal-500/60 text-teal-400'
                       : 'bg-gray-950 border-cyan-500/60 text-cyan-400'
                   }`}
+                  whileHover={{ scale: 1.2 }}
                 >
                   {exp.type === 'work' ? <Briefcase size={16} /> : <GraduationCap size={16} />}
-                </div>
+                </motion.div>
 
                 <div
                   className={`md:w-1/2 ${
@@ -116,7 +156,10 @@ export default function Experience() {
                     <span className="text-gray-500 text-xs">{exp.period}</span>
                   </div>
 
-                  <div className="bg-gray-900/60 border border-white/5 rounded-2xl p-6 hover:border-teal-500/20 transition-all duration-300">
+                  <motion.div
+                    className="bg-gray-900/60 border border-white/5 rounded-2xl p-6 hover:border-teal-500/20 transition-all duration-300 backdrop-blur-md"
+                    whileHover={{ y: -5, scale: 1.01 }}
+                  >
                     <div
                       className={`hidden md:flex items-center gap-2 text-gray-500 text-xs mb-3 ${
                         i % 2 === 0 ? 'justify-end' : 'justify-start'
@@ -137,25 +180,32 @@ export default function Experience() {
                     </p>
                     <p className="text-gray-400 text-sm leading-relaxed mb-4">{exp.description}</p>
 
-                    <div
+                    <motion.div
                       className={`flex flex-wrap gap-2 ${
                         i % 2 === 0 ? 'md:justify-end' : ''
                       }`}
+                      variants={containerVariants}
+                      initial="hidden"
+                      animate="visible"
                     >
                       {exp.tags.map((tag) => (
-                        <span
+                        <motion.span
                           key={tag}
-                          className="px-2.5 py-1 rounded-md bg-gray-800 text-gray-400 text-xs border border-white/5"
+                          variants={{
+                            hidden: { opacity: 0, scale: 0.8 },
+                            visible: { opacity: 1, scale: 1 },
+                          }}
+                          className="px-2.5 py-1 rounded-md bg-gray-800/50 text-gray-400 text-xs border border-white/5 backdrop-blur-sm"
                         >
                           {tag}
-                        </span>
+                        </motion.span>
                       ))}
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

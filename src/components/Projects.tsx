@@ -1,148 +1,162 @@
-import { useEffect, useRef, useState } from 'react';
 import { ExternalLink, Github, Star } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { useScrollAnimation } from '../hooks/useScrollAnimation';
 
 const projects = [
   {
-    title: 'Inventory Management System',
+    title: 'CloudSync Dashboard',
     description:
-      'A full-stack system to manage products, suppliers, stock movements, and purchase tracking with efficient database handling.',
-    image: 'https://images.pexels.com/photos/4481327/pexels-photo-4481327.jpeg',
-    tags: ['Flutter', 'PHP', 'MySQL'],
+      'A real-time analytics platform for cloud infrastructure monitoring with live metrics, alerting, and team collaboration tools.',
+    image: 'https://images.pexels.com/photos/1181676/pexels-photo-1181676.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['React', 'TypeScript', 'Node.js', 'PostgreSQL', 'WebSockets'],
+    stars: 842,
     featured: true,
     demo: '#',
     github: '#',
   },
   {
-    title: 'Exam Automation System',
+    title: 'DesignForge AI',
     description:
-      'A platform to automate exam processes including question management, evaluation, and result generation.',
-    image: 'https://images.pexels.com/photos/4144223/pexels-photo-4144223.jpeg',
-    tags: ['PHP', 'MySQL', 'JavaScript'],
+      'An AI-powered design assistant that generates UI components, color palettes, and layout suggestions from natural language prompts.',
+    image: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['Next.js', 'OpenAI API', 'Tailwind', 'Prisma'],
+    stars: 1203,
     featured: true,
     demo: '#',
     github: '#',
   },
   {
-    title: 'Smart Bookstore Website',
+    title: 'TaskFlow Pro',
     description:
-      'A web application for browsing and managing books with search functionality and user-friendly interface.',
-    image: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg',
-    tags: ['HTML', 'CSS', 'JavaScript', 'PHP'],
+      'Project management SaaS with Kanban boards, time tracking, team management, and automated workflow capabilities.',
+    image: 'https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['React', 'GraphQL', 'AWS', 'Docker'],
+    stars: 567,
     featured: false,
     demo: '#',
-    github: 'https://github.com/irinannshaji',
+    github: '#',
   },
   {
-    title: 'Smart Hotel Management System',
+    title: 'CryptoTrack',
     description:
-      'A system to manage hotel bookings, customer records, and billing operations efficiently.',
-    image: 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg',
-    tags: ['PHP', 'MySQL' ,'Flutter', 'Dart'],
+      'Real-time cryptocurrency portfolio tracker with advanced charts, price alerts, and DeFi protocol integrations.',
+    image: 'https://images.pexels.com/photos/844124/pexels-photo-844124.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['React', 'Python', 'Redis', 'Chart.js'],
+    stars: 389,
     featured: false,
     demo: '#',
-    github: 'https://github.com/irinannshaji',
+    github: '#',
   },
   {
-    title: 'Skill Swap Platform',
+    title: 'EcoShop',
     description:
-      'A platform where users can exchange skills and knowledge by connecting with others for collaborative learning.',
-    image: 'https://images.pexels.com/photos/3184465/pexels-photo-3184465.jpeg',
-    tags: ['JavaScript', 'HTML', 'CSS'],
+      'Sustainable e-commerce marketplace with carbon footprint tracking, ethical sourcing scores, and green checkout options.',
+    image: 'https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['Next.js', 'Stripe', 'PostgreSQL', 'Vercel'],
+    stars: 234,
     featured: false,
     demo: '#',
-    github: 'https://github.com/irinannshaji',
+    github: '#',
   },
   {
-    title: 'House Price Prediction',
+    title: 'VoiceNote AI',
     description:
-      'A machine learning project that predicts house prices based on features using data analysis and predictive modeling techniques.',
-    image: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg',
-    tags: ['Python', 'Machine Learning'],
-    featured: true,
-    demo: '#',
-    github: 'https://github.com/irinannshaji',
-  },
-  {
-    title: 'Random Animal Fact Generator',
-    description:
-      'A simple API-based web app that generates random animal facts dynamically using JavaScript.',
-    image: 'https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg',
-    tags: ['JavaScript', 'API', 'HTML', 'CSS'],
+      'Smart voice recording app with AI-powered transcription, smart summaries, and searchable knowledge base.',
+    image: 'https://images.pexels.com/photos/7688336/pexels-photo-7688336.jpeg?auto=compress&cs=tinysrgb&w=800',
+    tags: ['React Native', 'Whisper API', 'MongoDB', 'Express'],
+    stars: 456,
     featured: false,
     demo: '#',
-    github: 'https://github.com/irinannshaji'
+    github: '#',
   },
 ];
 
 const filters = ['All', 'React', 'Next.js', 'Python', 'TypeScript'];
 
-export default function Projects() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  const [activeFilter, setActiveFilter] = useState('All');
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
-      { threshold: 0.1 }
-    );
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, []);
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6 },
+  },
+};
+
+export default function Projects() {
+  const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
+  const [activeFilter, setActiveFilter] = useState('All');
 
   const filtered = activeFilter === 'All'
     ? projects
     : projects.filter((p) => p.tags.some((t) => t.includes(activeFilter)));
 
   return (
-    <section id="projects" className="py-28 bg-gray-900" ref={ref}>
+    <section id="projects" className="py-28 bg-gray-900 relative" ref={ref}>
       <div className="max-w-6xl mx-auto px-6">
-        <div
-          className={`text-center mb-12 transition-all duration-700 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        <motion.div
+          className="text-center mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? 'visible' : 'hidden'}
         >
-          <p className="text-teal-400 font-semibold text-sm tracking-widest uppercase mb-4">
+          <motion.p variants={itemVariants} className="text-teal-400 font-semibold text-sm tracking-widest uppercase mb-4">
             My Work
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          </motion.p>
+          <motion.h2 variants={itemVariants} className="text-4xl md:text-5xl font-bold text-white mb-4">
             Featured Projects
-          </h2>
-          <p className="text-gray-400 text-lg max-w-xl mx-auto">
+          </motion.h2>
+          <motion.p variants={itemVariants} className="text-gray-400 text-lg max-w-xl mx-auto">
             A selection of projects I've built — from SaaS platforms to AI-powered tools.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div
-          className={`flex flex-wrap justify-center gap-2 mb-12 transition-all duration-700 delay-100 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        <motion.div
+          className="flex flex-wrap justify-center gap-2 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? 'visible' : 'hidden'}
         >
           {filters.map((f) => (
-            <button
+            <motion.button
               key={f}
               onClick={() => setActiveFilter(f)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
                 activeFilter === f
                   ? 'bg-teal-500 text-gray-950'
-                  : 'border border-white/10 text-gray-400 hover:border-teal-500/40 hover:text-teal-400'
+                  : 'border border-white/10 text-gray-400 hover:border-teal-500/40 hover:text-teal-400 backdrop-blur-sm'
               }`}
             >
               {f}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
-        <div
-          className={`grid md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-700 delay-200 ${
-            visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}
+        <motion.div
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? 'visible' : 'hidden'}
         >
           {filtered.map((project) => (
-            <div
+            <motion.div
               key={project.title}
-              className={`group relative bg-gray-950/60 border rounded-2xl overflow-hidden hover:border-teal-500/30 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl hover:shadow-teal-500/10 ${
-                project.featured ? 'border-teal-500/20' : 'border-white/5'
+              variants={itemVariants}
+              whileHover={{ y: -10, scale: 1.02 }}
+              className={`group relative bg-gray-950/60 border rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-md ${
+                project.featured ? 'border-teal-500/20 lg:col-span-1' : 'border-white/5'
               }`}
             >
               {project.featured && (
@@ -152,13 +166,20 @@ export default function Projects() {
                 </div>
               )}
 
-              <div className="overflow-hidden h-48">
-                <img
+              <div className="overflow-hidden h-48 relative">
+                <motion.img
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover"
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.5 }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-300 h-48" />
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/20 to-transparent"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 0.6 }}
+                  transition={{ duration: 0.3 }}
+                />
               </div>
 
               <div className="p-6">
@@ -174,37 +195,47 @@ export default function Projects() {
                   {project.description}
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-5">
+                <motion.div
+                  className="flex flex-wrap gap-2 mb-5"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+                >
                   {project.tags.map((tag) => (
-                    <span
+                    <motion.span
                       key={tag}
-                      className="px-2.5 py-1 rounded-md bg-gray-800 text-gray-400 text-xs border border-white/5"
+                      variants={itemVariants}
+                      className="px-2.5 py-1 rounded-md bg-gray-800/50 text-gray-400 text-xs border border-white/5 backdrop-blur-sm"
                     >
                       {tag}
-                    </span>
+                    </motion.span>
                   ))}
-                </div>
+                </motion.div>
 
                 <div className="flex items-center gap-3">
-                  <a
+                  <motion.a
                     href={project.demo}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                     className="flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg bg-teal-500/10 border border-teal-500/20 text-teal-400 text-sm font-medium hover:bg-teal-500/20 transition-all"
                   >
                     <ExternalLink size={14} />
                     Live Demo
-                  </a>
-                  <a
+                  </motion.a>
+                  <motion.a
                     href={project.github}
-                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 text-gray-400 text-sm hover:border-white/20 hover:text-white transition-all"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 text-gray-400 text-sm hover:border-white/20 hover:text-white transition-all backdrop-blur-sm"
                   >
                     <Github size={14} />
                     Code
-                  </a>
+                  </motion.a>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

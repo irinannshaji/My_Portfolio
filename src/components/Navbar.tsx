@@ -41,7 +41,7 @@ export default function Navbar() {
           className="flex items-center gap-2 text-teal-400 font-bold text-xl tracking-tight hover:text-teal-300 transition-colors"
         >
           <Code2 size={24} />
-          <span>portfolio.</span>
+          <span>Irin</span>
         </button>
 
         <ul className="hidden md:flex items-center gap-1">

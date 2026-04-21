@@ -1,0 +1,23 @@
+import { useEffect, useRef, useState } from 'react';
+
+export function useParallax(speed = 0.5) {
+  const ref = useRef<aHTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current) {
+        const rect = ref.current.getBoundingClientRect();
+        const elementCenter = rect.top + rect.height / 2;
+        const windowCenter = window.innerHeight / 2;
+        const distance = elementCenter - windowCenter;
+        setOffset(distance * speed);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [speed]);
+
+  return { ref, offset };
+}

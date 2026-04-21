@@ -1,17 +1,35 @@
 import { useEffect, useState } from 'react';
 import { ArrowDown, Github, Linkedin, Twitter, Download } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { useParallax } from '../hooks/useParallax';
 
-const roles = ['Full Stack Developer', 'UI/UX Designer', 'App/Web Developer', 'Problem Solver'];
+const roles = ['Full Stack Developer', 'UI/UX Designer', 'React Specialist', 'Problem Solver'];
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: 'easeOut' },
+  },
+};
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0);
   const [displayed, setDisplayed] = useState('');
   const [deleting, setDeleting] = useState(false);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    setVisible(true);
-  }, []);
+  const { ref: parallaxRef, offset } = useParallax(0.3);
 
   useEffect(() => {
     const current = roles[roleIndex];
@@ -38,102 +56,127 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-950"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gray-950 pt-16"
+      ref={parallaxRef}
     >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <motion.div
+        className="absolute inset-0 pointer-events-none"
+        style={{ y: offset }}
+      >
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-            backgroundSize: '48px 48px',
-          }}
+      </motion.div>
+
+      <div className="absolute inset-0 flex items-center justify-end overflow-hidden pointer-events-none">
+        <motion.img
+          src="/portfolio_photo.jpeg"
+          alt="Irin Ann Shaji"
+          className="absolute right-0 top-1/2 -translate-y-1/2 h-full w-auto max-w-2xl object-cover opacity-70"
+          initial={{ x: 100, opacity: 0 }}
+          animate={{ x: 0, opacity: 0.7 }}
+          transition={{ duration: 1, ease: 'easeOut' }}
         />
+        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-gray-950" />
       </div>
 
-      <div
-        className={`relative z-10 max-w-4xl mx-auto px-6 text-center transition-all duration-1000 ${
-          visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-        }`}
+      <motion.div
+        className="relative z-10 max-w-4xl mx-auto px-6 text-left"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
       >
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/30 bg-teal-500/10 text-teal-400 text-sm font-medium mb-8">
+        <motion.div
+          variants={itemVariants}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-teal-500/30 bg-teal-500/10 text-teal-400 text-sm font-medium backdrop-blur-md"
+        >
           <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
           Available for opportunities
-        </div>
+        </motion.div>
 
-        <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight tracking-tight">
-          Hi, I'm{' '}
-          <span className="relative inline-block">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-cyan-400">
-              Irin Ann Shaji
-            </span>
-            <span className="absolute -bottom-2 left-0 right-0 h-px bg-gradient-to-r from-teal-400 to-cyan-400 opacity-50" />
+        <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight tracking-tight mt-8">
+          <span className="block">
+            Irin Ann
           </span>
-        </h1>
+          <motion.span
+            className="relative inline-block text-transparent bg-clip-text bg-gradient-to-r from-teal-400 via-cyan-400 to-teal-400"
+            animate={{
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }}
+          >
+            Shaji
+          </motion.span>
+        </motion.h1>
 
-        <div className="h-12 flex items-center justify-center mb-8">
-          <p className="text-2xl md:text-3xl text-gray-400 font-light">
-            <span className="text-teal-400 font-semibold">{displayed}</span>
-            <span className="animate-pulse text-teal-400">|</span>
-          </p>
-        </div>
+        <motion.p variants={itemVariants} className="text-xl md:text-2xl text-gray-400 font-light mb-4">
+          <span className="text-teal-400 font-semibold">{displayed}</span>
+          <motion.span
+            className="text-teal-400"
+            animate={{ opacity: [1, 0] }}
+            transition={{ duration: 0.5, repeat: Infinity }}
+          >
+            |
+          </motion.span>
+        </motion.p>
 
-        <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed mb-12">
-          I build smart and efficient applications by combining software development with 
-          emerging AI concepts.
-        </p>
+        <motion.p variants={itemVariants} className="text-gray-400 text-lg md:text-xl max-w-2xl leading-relaxed mb-12">
+          I craft beautiful, performant digital experiences that bridge the gap between elegant design
+          and robust engineering. Specialized in modern web technologies and user-centric design.
+        </motion.p>
 
-<div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-  
-        {/* View Work Button */}
-        <button
-          onClick={() =>
-            document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })
-        }
-        className="px-8 py-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-gray-950 font-semibold text-base transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-teal-500/25"
-    >
-    View My Work
-   </button>
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row items-center justify-start gap-4 mb-16">
+          <motion.button
+            onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-8 py-4 rounded-xl bg-teal-500 hover:bg-teal-400 text-gray-950 font-semibold text-base transition-all shadow-lg shadow-teal-500/25"
+          >
+            View My Work
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="px-8 py-4 rounded-xl border border-white/10 hover:border-teal-500/50 text-gray-300 hover:text-white font-semibold text-base transition-all hover:bg-white/5 flex items-center gap-2 backdrop-blur-sm"
+          >
+            <Download size={18} />
+            Download CV
+          </motion.button>
+        </motion.div>
 
-    {/* Download CV */}
-    <a
-      href="/cv.pdf"
-      download
-      className="px-8 py-4 rounded-xl border border-white/10 hover:border-teal-500/50 text-gray-300 hover:text-white font-semibold text-base transition-all duration-200 hover:bg-white/5 flex items-center gap-2"
-    >
-      <Download size={18} />
-    Download CV
-    </a>
-
-</div>
-
-        <div className="flex items-center justify-center gap-6">
+        <motion.div variants={itemVariants} className="flex items-center justify-start gap-6">
           {[
-            { icon: Github, label: 'GitHub', href: 'https://github.com/irinannshaji' },
-            { icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/irin-ann-shaji-758a0132b' },
+            { icon: Github, label: 'GitHub', href: '#' },
+            { icon: Linkedin, label: 'LinkedIn', href: '#' },
             { icon: Twitter, label: 'Twitter', href: '#' },
           ].map(({ icon: Icon, label, href }) => (
-            <a
+            <motion.a
               key={label}
               href={href}
               aria-label={label}
-              className="p-3 rounded-xl border border-white/10 text-gray-400 hover:text-teal-400 hover:border-teal-500/40 hover:bg-teal-500/10 transition-all duration-200"
+              whileHover={{ scale: 1.1, y: -5 }}
+              whileTap={{ scale: 0.95 }}
+              className="p-3 rounded-xl border border-white/10 text-gray-400 hover:text-teal-400 hover:border-teal-500/40 hover:bg-teal-500/10 transition-all backdrop-blur-sm"
             >
               <Icon size={20} />
-            </a>
+            </motion.a>
           ))}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
-      <button
+      <motion.button
         onClick={scrollDown}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-gray-600 hover:text-teal-400 transition-colors animate-bounce"
+        className="absolute bottom-10 left-10 text-gray-600 hover:text-teal-400 transition-colors"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity }}
         aria-label="Scroll down"
       >
         <ArrowDown size={24} />
-      </button>
+      </motion.button>
     </section>
   );
 }
