@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 export function useParallax(speed = 0.5) {
-  const ref = useRef<aHTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [offset, setOffset] = useState(0);
 
   useEffect(() => {
