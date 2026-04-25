@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://my-portfolio-delta-blue-el1zafhuob.vercel.app/sitemap.xml
